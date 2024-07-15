@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-import './registerAuthCodeChangeEvent';
-import './registerAuthenticatedEvent';
-import './registerLogoutEvent';
-import './registerLogoutReasonEvent';
-import './registerMainInit';
-import './registerMainLoadedEvent';
-import './registerMainReadyEvent';
-import './registerNeedsUpdateEvent';
-import './registerOnlineEvent';
-import './registerQRCodeIdleEvent';
-import './registerRequireAuthEvent';
+import { getMessageById } from '../../chat';
+import { WPPError } from '../../util';
+import { MsgKey, StatusV3Store, UserPrefs } from '../../whatsapp';
+import { revokeStatus } from '../../whatsapp/functions';
+
+export async function remove(msgId: string | MsgKey): Promise<boolean> {
+  const msg = await getMessageById(msgId);
+  try {
+    await revokeStatus(StatusV3Store.get(UserPrefs.getMeUser()) as any, msg);
+    return true;
+  } catch (error) {
+    throw new WPPError(
+      'error_on_remove_status',
+      `Error on remove status with id ${msgId.toString()}`
+    );
+  }
+}

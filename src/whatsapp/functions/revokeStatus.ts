@@ -1,5 +1,5 @@
 /*!
- * Copyright 2021 WPPConnect Team
+ * Copyright 2024 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-import './registerAuthCodeChangeEvent';
-import './registerAuthenticatedEvent';
-import './registerLogoutEvent';
-import './registerLogoutReasonEvent';
-import './registerMainInit';
-import './registerMainLoadedEvent';
-import './registerMainReadyEvent';
-import './registerNeedsUpdateEvent';
-import './registerOnlineEvent';
-import './registerQRCodeIdleEvent';
-import './registerRequireAuthEvent';
+import { exportModule } from '../exportModule';
+import { ChatModel, MsgModel } from '../models';
+
+/**
+ * @whatsapp WAWebRevokeStatusAction
+ */
+export declare function revokeStatus(
+  chat: ChatModel,
+  msg: MsgModel
+): Promise<any>;
+
+exportModule(
+  exports,
+  {
+    revokeStatus: 'default',
+  },
+  (m) => m.default?.displayName?.includes('RevokeStatusAction')
+);

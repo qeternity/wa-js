@@ -16,6 +16,7 @@
 
 export { get } from './get';
 export { getMyStatus } from './getMyStatus';
+export { remove } from './remove';
 export { ImageStatusOptions, sendImageStatus } from './sendImageStatus';
 export { sendRawStatus, SendStatusOptions } from './sendRawStatus';
 export { sendReadStatus } from './sendReadStatus';

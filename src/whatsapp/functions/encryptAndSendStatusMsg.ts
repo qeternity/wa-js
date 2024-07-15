@@ -14,20 +14,37 @@
  * limitations under the License.
  */
 
-import { Wid } from '..';
 import { exportModule } from '../exportModule';
-import { ChatModel } from '../models';
+import { MsgKey, Wid } from '../misc';
+import { MsgModel } from '../models';
 
-/** @whatsapp 50101
- * @whatsapp 650101 >= 2.2222.8
- * @whatsapp 211739 >= 2.2228.4
+/**
+ * @whatsapp WAWebEncryptAndSendStatusMsg
  */
-export declare function findChat(wid: Wid): Promise<ChatModel>;
+export declare function encryptAndSendStatusMsg(
+  msg: {
+    msg: {
+      type: string;
+      data: MsgModel;
+    };
+    data: {
+      ack: number;
+      author?: Wid;
+      from: Wid;
+      id: MsgKey;
+      subtype?: string;
+      to: Wid;
+      type: string;
+    };
+  },
+  proto: any,
+  report: any
+): Promise<any>;
 
 exportModule(
   exports,
   {
-    findChat: ['findChat', 'findOrCreateLatestChat'],
+    encryptAndSendStatusMsg: 'encryptAndSendStatusMsg',
   },
-  (m) => m.findChat || m.findOrCreateLatestChat
+  (m) => m.encryptAndSendStatusMsg
 );

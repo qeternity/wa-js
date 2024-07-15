@@ -1,5 +1,5 @@
 /*!
- * Copyright 2021 WPPConnect Team
+ * Copyright 2024 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import './registerAuthCodeChangeEvent';
-import './registerAuthenticatedEvent';
-import './registerLogoutEvent';
-import './registerLogoutReasonEvent';
-import './registerMainInit';
-import './registerMainLoadedEvent';
-import './registerMainReadyEvent';
-import './registerNeedsUpdateEvent';
-import './registerOnlineEvent';
-import './registerQRCodeIdleEvent';
-import './registerRequireAuthEvent';
+import { exportModule } from '../exportModule';
+
+/**
+ * @whatsapp WAWebStatusSendGatingUtils >= 2.3000.0
+ */
+export declare function primaryFeatureEnabled(key: string): boolean;
+
+exportModule(
+  exports,
+  {
+    primaryFeatureEnabled: 'primaryFeatureEnabled',
+  },
+  (m) => m.primaryFeatureEnabled
+);
