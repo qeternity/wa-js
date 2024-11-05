@@ -15,24 +15,20 @@
  */
 
 import { exportModule } from '../exportModule';
-import { ChatModel, MsgModel } from '../models';
+import { NoteModel } from '../models';
+import { Collection } from './Collection';
 
-/**
- * @whatsapp WAWebRevokeStatusAction
+/** @whatsapp WAWebNoteCollection
  */
-export declare function revokeStatus(
-  chat: ChatModel,
-  msg: MsgModel
-): Promise<any>;
-
+export declare class NoteCollection extends Collection<NoteModel> {
+  static model: NoteModel;
+  maybeGetNoteByChatJid(a?: any): any;
+  hasCachedQueryForChatJid(e?: any): any;
+  updateCollectionFromDB(a?: any, b?: any): any;
+  purgeNotesByChatJid(a?: any): any;
+}
 exportModule(
   exports,
-  {
-    revokeStatus: ['default'],
-  },
-  /**
-   * This module only loaded after device is connected
-   * I be creating other function for check expires based directily from files
-   */
-  (m) => m.default?.displayName?.includes('RevokeStatusAction')
+  { NoteCollection: ['NoteCollection.constructor'] },
+  (m) => m.NoteCollection
 );

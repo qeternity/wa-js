@@ -33,6 +33,7 @@ export { getLastSeen } from './getLastSeen';
 export { getMessageACK } from './getMessageACK';
 export { getMessageById } from './getMessageById';
 export { getMessages, GetMessagesOptions } from './getMessages';
+export { getNotes } from './getNotes';
 export { getPlatformFromMessage } from './getPlatformFromMessage';
 export { getQuotedMsg } from './getQuotedMsg';
 export { getQuotedMsgKey } from './getQuotedMsgKey';
@@ -68,6 +69,7 @@ export {
   PoolMessageOptions,
   sendCreatePollMessage,
 } from './sendCreatePollMessage';
+export { sendEventMessage } from './sendEventMessage';
 export {
   AudioMessageOptions,
   AutoDetectMessageOptions,
@@ -100,5 +102,6 @@ export {
   VCardContact,
 } from './sendVCardContactMessage';
 export { setInputText } from './setInputText';
+export { setNotes } from './setNotes';
 export { starMessage, StarMessageReturn } from './starMessage';
 export { unmute } from './unmute';

@@ -1,5 +1,5 @@
 /*!
- * Copyright 2023 WPPConnect Team
+ * Copyright 2021 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-export { addSubgroups } from './addSubgroups';
-export { create } from './create';
-export { deactivate } from './deactivate';
-export { demoteParticipants } from './demoteParticipants';
-export { getAnnouncementGroup } from './getAnnouncementGroup';
-export { getParticipants } from './getParticipants';
-export { getSubgroups } from './getSubgroups';
-export { promoteParticipants } from './promoteParticipants';
-export { removeSubgroups } from './removeSubgroups';
+import { exportModule } from '../exportModule';
+import { BotProfileModel } from '../models/BotProfileModel';
+import { Collection } from './Collection';
+
+/** @whatsapp WAWebBotProfileCollection
+ */
+export declare class BotProfileCollection extends Collection<BotProfileModel> {
+  static model: BotProfileModel;
+  static staleCollection?: any;
+  getDefaultBot(): any;
+  findImpl(a?: any): any;
+  update(): any;
+}
+exportModule(
+  exports,
+  {
+    BotProfileCollection: ['BotProfileCollection'],
+  },
+  (m) => m.BotProfileCollection
+);

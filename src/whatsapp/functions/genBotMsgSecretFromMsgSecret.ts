@@ -1,5 +1,5 @@
 /*!
- * Copyright 2023 WPPConnect Team
+ * Copyright 2024 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-export { addSubgroups } from './addSubgroups';
-export { create } from './create';
-export { deactivate } from './deactivate';
-export { demoteParticipants } from './demoteParticipants';
-export { getAnnouncementGroup } from './getAnnouncementGroup';
-export { getParticipants } from './getParticipants';
-export { getSubgroups } from './getSubgroups';
-export { promoteParticipants } from './promoteParticipants';
-export { removeSubgroups } from './removeSubgroups';
+import { exportModule } from '../exportModule';
+
+/**
+ * @whatsapp WAWebBotMessageSecret
+ */
+export declare function genBotMsgSecretFromMsgSecret(a: any): Promise<any>;
+
+exportModule(
+  exports,
+  {
+    genBotMsgSecretFromMsgSecret: 'genBotMsgSecretFromMsgSecret',
+  },
+  (m) => m.genBotMsgSecretFromMsgSecret
+);

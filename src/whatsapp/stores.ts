@@ -29,6 +29,9 @@ export declare const BusinessCategoriesResultStore: collections.BusinessCategori
  * @whatsapp 493581 >= 2.2222.8
  */
 export declare const BusinessProfileStore: collections.BusinessProfileCollection;
+/** @whatsapp WAWebBotProfileCollection
+ */
+export declare const BotProfileStore: collections.BotProfileCollection;
 /** @whatsapp 60868
  * @whatsapp 31218 >= 2.2204.13
  * @whatsapp 160868 >= 2.2222.8
@@ -129,6 +132,7 @@ export declare const StickerPackStore: collections.StickerPackCollection;
  */
 export declare const StickerSearchStore: collections.StickerSearchCollection;
 export declare const PinInChatStore: collections.PinInChatCollection;
+export declare const NoteStore: collections.NoteCollection;
 
 const storeNames = [
   'BlocklistStore',
@@ -353,10 +357,33 @@ exportModule(
 exportModule(
   exports,
   {
+    BotProfileStore: ['BotProfileCollection'],
+  },
+  (m) => m.BotProfileCollection
+);
+exportModule(
+  exports,
+  {
     ProfilePicThumbStore: [
       'ProfilePicThumbCollection',
       'ProfilePicThumbCollectionImpl',
     ],
   },
   (m) => m.ProfilePicThumbCollection || m.ProfilePicThumbCollectionImpl
+);
+
+exportModule(
+  exports,
+  {
+    QuickReplyStore: ['QuickReplyCollectionImpl', 'QuickReplyCollection'],
+  },
+  (m) => m.QuickReplyCollectionImpl || m.QuickReplyCollection
+);
+
+exportModule(
+  exports,
+  {
+    NoteStore: ['NoteCollection'],
+  },
+  (m) => m.NoteCollection
 );
