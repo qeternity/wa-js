@@ -22,11 +22,11 @@ export { Config } from './Config';
 
 declare global {
   interface Window {
-    WPPConfig: Config;
+    __vatsappConfig: Config;
   }
 }
 
-const setted = window.WPPConfig || {};
+const setted = window.__vatsappConfig || {};
 
 const merged = { ...defaultConfig, ...setted };
 
@@ -61,4 +61,4 @@ const createHander = <T>(path: (string | number | symbol)[] = []) => ({
 
 export const config: Config = new Proxy<Config>(merged, createHander<Config>());
 
-window.WPPConfig = config;
+// window.__vatsappConfig = config;

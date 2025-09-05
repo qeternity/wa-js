@@ -27,7 +27,7 @@ module.exports = (env, argv) => {
       filename: 'wppconnect-wa.js',
       path: path.resolve(__dirname, 'dist'),
       library: {
-        name: 'WPP',
+        name: '__vatsapp',
         type: 'global',
       },
     },
