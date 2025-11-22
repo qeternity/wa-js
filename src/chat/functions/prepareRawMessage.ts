@@ -33,6 +33,7 @@ import {
   unixTime,
 } from '../../whatsapp/functions';
 import { defaultSendMessageOptions, RawMessage, SendMessageOptions } from '..';
+import { rehydrateMessage } from '../util';
 import {
   generateMessageID,
   getMessageById,
@@ -162,11 +163,16 @@ export async function prepareRawMessage<T extends RawMessage>(
       );
 
       for (const id of ids) {
-        const wid = `${id}@c.us`;
-        if (!participants.includes(wid)) {
-          continue;
+        const lidWid = `${id}@lid`;
+        const pnWid = `${id}@c.us`;
+
+        // AFAIK, groups are only LID. Doesn't matter if account is migrated or not
+        // But will keep support for pnWid just in case
+        if (participants.includes(lidWid)) {
+          options.mentionedList.push(lidWid);
+        } else if (participants.includes(pnWid)) {
+          options.mentionedList.push(pnWid);
         }
-        options.mentionedList.push(wid);
       }
     }
   }
@@ -194,6 +200,13 @@ export async function prepareRawMessage<T extends RawMessage>(
     message.mentionedJidList = mentionedList;
   }
 
+  let isQuotedRehydrated = false;
+
+  if (options.quotedMsgPayload) {
+    options.quotedMsg = rehydrateMessage(options.quotedMsgPayload);
+    isQuotedRehydrated = true;
+  }
+
   /**
    * Quote a message, like a reply message
    */
@@ -211,7 +224,11 @@ export async function prepareRawMessage<T extends RawMessage>(
       });
     }
 
-    if (!options.quotedMsg?.isStatusV3 && !canReplyMsg(options.quotedMsg)) {
+    if (
+      !options.quotedMsg?.isStatusV3 &&
+      !canReplyMsg(options.quotedMsg) &&
+      !isQuotedRehydrated
+    ) {
       throw new WPPError(
         'quoted_msg_can_not_reply',
         'QuotedMsg can not reply',
