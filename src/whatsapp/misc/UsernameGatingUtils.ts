@@ -1,5 +1,5 @@
 /*!
- * Copyright 2021 WPPConnect Team
+ * Copyright 2025 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,21 @@
  */
 
 import { exportModule } from '../exportModule';
-import { ChatModel, ModelPropertiesContructor, MsgModel } from '../models';
-import { SendMsgResultObject } from '../types';
 
 /**
- * @whatsapp 975887 >= 2.2222.8
- * @whatsapp 623631 >= 2.2228.4
- * @whatsapp >= 2.3000.1030351223
+ * @whatsapp WAWebUsernameGatingUtils
  */
-export declare function addAndSendMsgToChat(
-  chat: ChatModel,
-  message: ModelPropertiesContructor<MsgModel>
-): Promise<[Promise<MsgModel>, Promise<SendMsgResultObject>]>;
+export declare namespace UsernameGatingUtils {
+  /**
+   * Check if username feature is supported
+   * @whatsapp >= 2.3000.1030318976
+   * @returns true if username feature is supported
+   */
+  function usernameSupported(): boolean;
+}
 
 exportModule(
   exports,
-  {
-    addAndSendMsgToChat: 'addAndSendMsgToChat',
-  },
-  (m) => m.addAndSendMsgToChat
+  'UsernameGatingUtils',
+  (m) => m.usernameSupported && typeof m.usernameSupported === 'function'
 );
