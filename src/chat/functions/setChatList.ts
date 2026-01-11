@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable */
-
 import { WPPError } from '../../util';
 import * as webpack from '../../webpack';
 import { Cmd } from '../../whatsapp';
@@ -106,7 +104,7 @@ export async function setChatList(
   }
 }
 
-// webpack.onFullReady(applyPatch, 1000);
+webpack.onFullReady(applyPatch, 1000);
 
 function applyPatch() {
   wrapModuleFunction(getShouldAppearInList, (func, ...args) => {
@@ -152,7 +150,6 @@ export function wrapShouldAppearFunction<TFunc extends (...args: any[]) => any>(
   func: TFunc,
   callback: (func: TFunc, ...args: Parameters<TFunc>) => ReturnType<TFunc>
 ): TFunc {
-  return func as TFunc;
   const wrappedFunc: any = (...args: Parameters<TFunc>) => {
     return callback(func, ...args);
   };
