@@ -214,7 +214,7 @@ export function injectLoader(): void {
     debug('ready to use');
     await internalEv.emitAsync('webpack.ready').catch(() => null);
 
-    debug('wppForceMainLoad', (window as any).wppForceMainLoad);
+    debug('wppForceMainLoad', (window as any).__vatsappForceMainLoad);
 
     if ((window as any).__vatsappForceMainLoad) {
       await new Promise((resolve) => setTimeout(resolve, 5000));
