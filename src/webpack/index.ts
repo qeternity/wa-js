@@ -150,8 +150,8 @@ export function injectLoader(): void {
     debug('ready to use');
     await internalEv.emitAsync('webpack.ready').catch(() => null);
 
-    if ((window as any).wppForceMainLoad) {
-      debug('wppForceMainLoad is set, waiting 5 seconds');
+    if ((window as any).__vatsappForceMainLoad) {
+      debug('__vatsappForceMainLoad is set, waiting 5 seconds');
       await new Promise((resolve) => setTimeout(resolve, 5000));
     } else {
       debug('waiting main ready');
@@ -214,9 +214,9 @@ export function injectLoader(): void {
     debug('ready to use');
     await internalEv.emitAsync('webpack.ready').catch(() => null);
 
-    debug('wppForceMainLoad', (window as any).wppForceMainLoad);
+    debug('wppForceMainLoad', (window as any).__vatsappForceMainLoad);
 
-    if ((window as any).wppForceMainLoad) {
+    if ((window as any).__vatsappForceMainLoad) {
       await new Promise((resolve) => setTimeout(resolve, 5000));
     } else {
       await waitMainReady;
