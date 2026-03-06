@@ -14,8 +14,27 @@
  * limitations under the License.
  */
 
-export { accept } from './accept';
-export { enableCallInterface } from './enableCallInterface';
-export { end } from './end';
-export { offer } from './offer';
-export { reject, reject as rejectCall } from './reject';
+import { MsgKey } from '..';
+import { exportModule } from '../exportModule';
+import { ModelPropertiesContructor, MsgModel } from '../models';
+
+export interface MsgFindCallLogParams {
+  count: number;
+  anchor?: MsgKey;
+}
+
+/**
+ * Find call log messages
+ * @whatsapp WAWebDBMessageFindLocal >= 2.3000.1034162388
+ */
+export declare function msgFindCallLog(
+  params: MsgFindCallLogParams
+): Promise<ModelPropertiesContructor<MsgModel>[]>;
+
+exportModule(
+  exports,
+  {
+    msgFindCallLog: 'msgFindCallLog',
+  },
+  (m) => m.msgFindCallLog
+);

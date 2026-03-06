@@ -1,5 +1,5 @@
 /*!
- * Copyright 2021 WPPConnect Team
+ * Copyright 2026 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-export { accept } from './accept';
-export { enableCallInterface } from './enableCallInterface';
-export { end } from './end';
-export { offer } from './offer';
-export { reject, reject as rejectCall } from './reject';
+/**
+ * StreamInfo represents the internal connection state
+ * @whatsapp 2.3000.x
+ */
+export enum StreamInfo {
+  OFFLINE = 'OFFLINE',
+  OPENING = 'OPENING',
+  PAIRING = 'PAIRING',
+  SYNCING = 'SYNCING',
+  RESUMING = 'RESUMING',
+  CONNECTING = 'CONNECTING',
+  NORMAL = 'NORMAL',
+}

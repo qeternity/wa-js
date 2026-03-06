@@ -1,5 +1,5 @@
 /*!
- * Copyright 2025 WPPConnect Team
+ * Copyright 2026 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-import { exportModule } from '../exportModule';
-
 /**
- * @whatsapp WAWebUsernameGatingUtils
+ * StreamMode represents the connection state mode
+ * @whatsapp 2.3000.x
  */
-export declare namespace UsernameGatingUtils {
-  /**
-   * Check if username feature is supported
-   * @whatsapp >= 2.3000.1030318976
-   * @returns true if username feature is supported
-   */
-  function usernameSupported(): boolean;
+export enum StreamMode {
+  QR = 'QR',
+  MAIN = 'MAIN',
+  SYNCING = 'SYNCING',
+  OFFLINE = 'OFFLINE',
+  CONFLICT = 'CONFLICT',
+  PROXYBLOCK = 'PROXYBLOCK',
+  TOS_BLOCK = 'TOS_BLOCK',
+  SMB_TOS_BLOCK = 'SMB_TOS_BLOCK',
+  DEPRECATED_VERSION = 'DEPRECATED_VERSION',
 }
-
-exportModule(
-  exports,
-  'UsernameGatingUtils',
-  (m) => m.usernameSupported && typeof m.usernameSupported === 'function'
-);

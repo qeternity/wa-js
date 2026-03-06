@@ -36,7 +36,10 @@ export {
 export { getMigrationState, MigrationState } from './getMigrationState';
 export { getMyDeviceId } from './getMyDeviceId';
 export { getMyUserId } from './getMyUserId';
+export { getMyUserLid } from './getMyUserLid';
+export { getMyUserWid } from './getMyUserWid';
 export { getPlatform } from './getPlatform';
+export { getStreamData, StreamData } from './getStreamData';
 export { getTheme, Theme } from './getTheme';
 export { isAuthenticated } from './isAuthenticated';
 export { isIdle } from './isIdle';

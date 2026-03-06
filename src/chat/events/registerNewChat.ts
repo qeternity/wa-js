@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-export { accept } from './accept';
-export { enableCallInterface } from './enableCallInterface';
-export { end } from './end';
-export { offer } from './offer';
-export { reject, reject as rejectCall } from './reject';
+import { internalEv } from '../../eventEmitter';
+import * as webpack from '../../webpack';
+import { ChatModel, ChatStore } from '../../whatsapp';
+
+webpack.onInjected(() => registerNewChat());
+
+function registerNewChat() {
+  ChatStore.on('add', (chat: ChatModel) => {
+    queueMicrotask(() => {
+      internalEv.emit('chat.new_chat', chat);
+    });
+  });
+}
