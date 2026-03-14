@@ -14,123 +14,123 @@
  * limitations under the License.
  */
 
-import { config } from '../config';
-import * as conn from '../conn';
-import { internalEv } from '../eventEmitter';
-import { Tracker } from './Tracker';
+// import { config } from '../config';
+// import * as conn from '../conn';
+// import { internalEv } from '../eventEmitter';
+// import { Tracker } from './Tracker';
 
-export * from './Tracker';
+// export * from './Tracker';
 
 declare const __VERSION__: string;
 export const waVersion = __VERSION__;
 
-/**
- * Always keep the main tracker only for version report
- */
-const titleParts = ['W: ', '-', ', WA-JS: ', waVersion];
+// /**
+//  * Always keep the main tracker only for version report
+//  */
+// const titleParts = ['W: ', '-', ', WA-JS: ', waVersion];
 
-const mainTracker = new Tracker('G-MTQ4KY110F');
+// const mainTracker = new Tracker('G-MTQ4KY110F');
 
-const otherTracker = config.googleAnalyticsId
-  ? new Tracker(config.googleAnalyticsId)
-  : null;
+// const otherTracker = config.googleAnalyticsId
+//   ? new Tracker(config.googleAnalyticsId)
+//   : null;
 
-internalEv.on('webpack.injected', () => {
-  const authenticated = conn.isAuthenticated();
-  const method = conn.isMultiDevice() ? 'multidevice' : 'legacy';
+// internalEv.on('webpack.injected', () => {
+//   const authenticated = conn.isAuthenticated();
+//   const method = conn.isMultiDevice() ? 'multidevice' : 'legacy';
 
-  // Add version info
-  if (!config.disableGoogleAnalytics) {
-    mainTracker.documentTitle = titleParts.join('');
+//   // Add version info
+//   if (!config.disableGoogleAnalytics) {
+//     mainTracker.documentTitle = titleParts.join('');
 
-    mainTracker.setUserProperty('method', method);
-    mainTracker.setUserProperty('wa_js', waVersion);
-    mainTracker.setUserProperty('powered_by', config.poweredBy || '-');
-  }
+//     mainTracker.setUserProperty('method', method);
+//     mainTracker.setUserProperty('wa_js', waVersion);
+//     mainTracker.setUserProperty('powered_by', config.poweredBy || '-');
+//   }
 
-  internalEv.on('conn.main_init', () => {
-    titleParts[1] = (window as any).Debug?.VERSION || '-';
+//   internalEv.on('conn.main_init', () => {
+//     titleParts[1] = (window as any).Debug?.VERSION || '-';
 
-    if (!config.disableGoogleAnalytics) {
-      mainTracker.documentTitle = titleParts.join('');
+//     if (!config.disableGoogleAnalytics) {
+//       mainTracker.documentTitle = titleParts.join('');
 
-      mainTracker.setUserProperty('whatsapp', titleParts[1]);
-    }
-  });
+//       mainTracker.setUserProperty('whatsapp', titleParts[1]);
+//     }
+//   });
 
-  if (otherTracker && !config.disableGoogleAnalytics) {
-    mainTracker.trackEvent('page_view', { authenticated, method });
+//   if (otherTracker && !config.disableGoogleAnalytics) {
+//     mainTracker.trackEvent('page_view', { authenticated, method });
 
-    otherTracker.documentTitle = titleParts.join('-');
+//     otherTracker.documentTitle = titleParts.join('-');
 
-    otherTracker.setUserProperty('method', method);
-    otherTracker.setUserProperty('wa_js', waVersion);
-    otherTracker.setUserProperty('powered_by', config.poweredBy || '-');
-    internalEv.on('conn.main_init', () => {
-      titleParts[1] = (window as any).Debug?.VERSION || '-';
+//     otherTracker.setUserProperty('method', method);
+//     otherTracker.setUserProperty('wa_js', waVersion);
+//     otherTracker.setUserProperty('powered_by', config.poweredBy || '-');
+//     internalEv.on('conn.main_init', () => {
+//       titleParts[1] = (window as any).Debug?.VERSION || '-';
 
-      otherTracker.documentTitle = titleParts.join('');
+//       otherTracker.documentTitle = titleParts.join('');
 
-      otherTracker.setUserProperty('whatsapp', titleParts[1]);
-    });
+//       otherTracker.setUserProperty('whatsapp', titleParts[1]);
+//     });
 
-    if (typeof config.googleAnalyticsUserProperty === 'object') {
-      for (const key in config.googleAnalyticsUserProperty) {
-        const value = config.googleAnalyticsUserProperty[key];
-        otherTracker.setUserProperty(key, value);
-      }
-    }
+//     if (typeof config.googleAnalyticsUserProperty === 'object') {
+//       for (const key in config.googleAnalyticsUserProperty) {
+//         const value = config.googleAnalyticsUserProperty[key];
+//         otherTracker.setUserProperty(key, value);
+//       }
+//     }
 
-    otherTracker.trackEvent('page_view', { authenticated, method });
-  }
+//     otherTracker.trackEvent('page_view', { authenticated, method });
+//   }
 
-  internalEv.on('config.update', (evt) => {
-    if (!config.disableGoogleAnalytics) {
-      if (evt.path[0] === 'poweredBy') {
-        mainTracker.setUserProperty('powered_by', evt.value || '-');
-        if (otherTracker) {
-          otherTracker.setUserProperty('powered_by', evt.value || '-');
-        }
-      } else if (
-        evt.path[0] === 'googleAnalyticsUserProperty' &&
-        otherTracker
-      ) {
-        if (typeof config.googleAnalyticsUserProperty === 'object') {
-          for (const key in config.googleAnalyticsUserProperty) {
-            const value = config.googleAnalyticsUserProperty[key];
-            otherTracker.setUserProperty(key, value);
-          }
-        }
-      }
-    }
-  });
-});
+//   internalEv.on('config.update', (evt) => {
+//     if (!config.disableGoogleAnalytics) {
+//       if (evt.path[0] === 'poweredBy') {
+//         mainTracker.setUserProperty('powered_by', evt.value || '-');
+//         if (otherTracker) {
+//           otherTracker.setUserProperty('powered_by', evt.value || '-');
+//         }
+//       } else if (
+//         evt.path[0] === 'googleAnalyticsUserProperty' &&
+//         otherTracker
+//       ) {
+//         if (typeof config.googleAnalyticsUserProperty === 'object') {
+//           for (const key in config.googleAnalyticsUserProperty) {
+//             const value = config.googleAnalyticsUserProperty[key];
+//             otherTracker.setUserProperty(key, value);
+//           }
+//         }
+//       }
+//     }
+//   });
+// });
 
-if (!config.disableGoogleAnalytics) {
-  internalEv.on('conn.authenticated', () => {
-    const method = conn.isMultiDevice() ? 'multidevice' : 'legacy';
-    mainTracker.trackEvent('login', { method });
-    if (otherTracker) {
-      mainTracker.trackEvent('login', { method });
-    }
-  });
+// if (!config.disableGoogleAnalytics) {
+//   internalEv.on('conn.authenticated', () => {
+//     const method = conn.isMultiDevice() ? 'multidevice' : 'legacy';
+//     mainTracker.trackEvent('login', { method });
+//     if (otherTracker) {
+//       mainTracker.trackEvent('login', { method });
+//     }
+//   });
 
-  internalEv.on('conn.logout', () => {
-    const method = conn.isMultiDevice() ? 'multidevice' : 'legacy';
-    mainTracker.trackEvent('logout', { method });
-    if (otherTracker) {
-      otherTracker.trackEvent('logout', { method });
-    }
-  });
-}
+//   internalEv.on('conn.logout', () => {
+//     const method = conn.isMultiDevice() ? 'multidevice' : 'legacy';
+//     mainTracker.trackEvent('logout', { method });
+//     if (otherTracker) {
+//       otherTracker.trackEvent('logout', { method });
+//     }
+//   });
+// }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function trackException(description: string, fatal = false) {
-  if (config.disableGoogleAnalytics) {
-    return;
-  }
-
-  mainTracker.trackEvent('exception', { description, fatal });
-  if (otherTracker) {
-    otherTracker.trackEvent('exception', { description, fatal });
-  }
+  // if (config.disableGoogleAnalytics) {
+  //   return;
+  // }
+  // mainTracker.trackEvent('exception', { description, fatal });
+  // if (otherTracker) {
+  //   otherTracker.trackEvent('exception', { description, fatal });
+  // }
 }
