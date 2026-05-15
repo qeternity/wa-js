@@ -19,6 +19,13 @@ import { WPPError } from '../../util';
 import { CallModel, CallStore, websocket } from '../../whatsapp';
 import { CALL_STATES } from '../../whatsapp/enums';
 
+export interface CallRejectOptions {
+  /**
+   * Force sending the reject stanza, skipping state validation and E2E session setup.
+   */
+  force?: boolean;
+}
+
 /**
  * Reject a incoming call
  *
@@ -30,6 +37,9 @@ import { CALL_STATES } from '../../whatsapp/enums';
  * // Reject specific call id
  * WPP.call.reject(callId);
  *
+ * // Force reject specific call id
+ * WPP.call.reject(callId, { force: true });
+ *
  * // Reject any incoming call
  * WPP.on('call.incoming_call', (call) => {
  *   WPP.call.reject(call.id);
@@ -39,7 +49,11 @@ import { CALL_STATES } from '../../whatsapp/enums';
  * @param   {string}  callId  The call ID, empty to reject the first one
  * @return  {[type]}          [return description]
  */
-export async function reject(callId?: string): Promise<boolean> {
+export async function reject(
+  callId?: string,
+  options: CallRejectOptions | boolean = {}
+): Promise<boolean> {
+  const force = typeof options === 'boolean' ? options : !!options.force;
   let call: CallModel | undefined = undefined;
 
   if (callId) {
@@ -68,6 +82,7 @@ export async function reject(callId?: string): Promise<boolean> {
   }
 
   if (
+    !force &&
     call.getState() !== CALL_STATES.INCOMING_RING &&
     call.getState() !== CALL_STATES.ReceivedCall &&
     !call.isGroup
