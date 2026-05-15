@@ -1,6 +1,6 @@
 {
   "name": "@wppconnect/wa-js",
-  "version": "3.23.3",
+  "version": "4.1.0",
   "description": "WPPConnect/WA-JS is an open-source project with the aim of exporting functions from WhatsApp Web",
   "license": "Apache-2.0",
   "author": {
@@ -22,9 +22,9 @@
   "scripts": {
     "build:dev": "webpack --devtool inline-source-map --mode development",
     "build:prd": "webpack",
-    "changelog:last": "conventional-changelog -p angular -r 2",
-    "changelog:preview": "conventional-changelog -p angular -u",
-    "changelog:update": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "changelog:last": "conventional-changelog -n ./changelog.config.cjs -r 2",
+    "changelog:preview": "conventional-changelog -n ./changelog.config.cjs -u",
+    "changelog:update": "conventional-changelog -n ./changelog.config.cjs -i CHANGELOG.md -s -r 0",
     "clean": "shx rm -rf dist",
     "commit": "cz",
     "docs:build": "npm run docs:clean && typedoc --gitRevision main",
@@ -40,7 +40,7 @@
     "update-models-attributes": "ts-node ./src/tools/updateModelsAttributes.ts",
     "update-module-id": "ts-node ./src/tools/updateModuleID.ts",
     "wa-source:clean": "shx rm -rf wa-source",
-    "wa-source:format": "prettier --ignore-path .prettierignore --write ./wa-source",
+    "wa-source:format": "sh -c 'prettier --ignore-path .prettierignore --write ./wa-source/$1' --",
     "watch": "webpack watch --devtool inline-source-map --mode development"
   },
   "devDependencies": {

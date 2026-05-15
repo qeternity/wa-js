@@ -35,7 +35,7 @@ export const waVersion = __VERSION__;
 //   ? new Tracker(config.googleAnalyticsId)
 //   : null;
 
-// internalEv.on('webpack.injected', () => {
+// internalEv.on('loader.injected', () => {
 //   const authenticated = conn.isAuthenticated();
 //   const method = conn.isMultiDevice() ? 'multidevice' : 'legacy';
 

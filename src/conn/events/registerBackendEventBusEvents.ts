@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-import { LOGOUT_REASON_CODE, LogoutReason } from '../enums';
-import { exportModule } from '../exportModule';
+import { internalEv } from '../../eventEmitter';
+import * as loader from '../../loader';
+import { BackendEventBus } from '../../whatsapp';
+import { BackendEventName } from '../../whatsapp/misc/BackendEventBus';
 
-/**
- * @whatsapp WAWebLogoutReason >= 2.3000.x
- */
-export declare function getErrorCodeFromLogoutReason(
-  type: LogoutReason
-): LOGOUT_REASON_CODE | null;
+loader.onInjected(register);
 
-exportModule(
-  exports,
-  {
-    getErrorCodeFromLogoutReason: 'getErrorCodeFromLogoutReason',
-  },
-  (m) => m.getErrorCodeFromLogoutReason
-);
+function register() {
+  const originalTrigger = BackendEventBus.trigger.bind(BackendEventBus);
+
+  (BackendEventBus as any).trigger = function (
+    eventName: string,
+    ...args: any[]
+  ) {
+    internalEv.emit(
+      'conn.backend_event',
+      eventName as BackendEventName,
+      ...args
+    );
+    return originalTrigger(eventName, ...args);
+  };
+}
