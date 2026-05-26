@@ -19,9 +19,9 @@ jobs:
         run: git fetch --tags -f || true
 
       - name: Setup Node
-        uses: actions/setup-node@v6.3.0
+        uses: actions/setup-node@v6.4.0
         with:
-          node-version: 24.14.0
+          node-version: 24.15.0
 
       - name: Get npm cache directory
         id: npm-cache
@@ -62,7 +62,7 @@ jobs:
           tag_name: nightly
 
       - name: Update Nightly Release
-        uses: meeDamian/github-release@2.0
+        uses: meeDamian/github-release@v2.0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
