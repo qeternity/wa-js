@@ -1,3 +1,3 @@
-## <small>4.3.1 (2026-06-19)</small>
+## <small>4.4.1 (2026-07-15)</small>
 
-* fix(group): pass membershipApprovalMode to joinGroupViaInvite (#3468) ([3383b0374789dd25564068669bd2caadc25c0f5a](https://github.com/wppconnect-team/wa-js/commit/3383b0374789dd25564068669bd2caadc25c0f5a)), closes [#3468](https://github.com/wppconnect-team/wa-js/issues/3468) [#2221](https://github.com/wppconnect-team/wa-js/issues/2221)
+* fix: restore MsgKey._serialized on keys created before injection (#3488) ([a0abd24b69b29bb93d6ba49c8a3422dac057a9b7](https://github.com/wppconnect-team/wa-js/commit/a0abd24b69b29bb93d6ba49c8a3422dac057a9b7)), closes [#3488](https://github.com/wppconnect-team/wa-js/issues/3488) [#3484](https://github.com/wppconnect-team/wa-js/issues/3484)
