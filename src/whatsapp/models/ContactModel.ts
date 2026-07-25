@@ -101,11 +101,6 @@ interface Derived {
    */
   userid?: any;
   /**
-   * Deprecated in favor of getUserhash
-   * @deprecated
-   */
-  userhash?: any;
-  /**
    * Deprecated in favor of getSearchName
    * @deprecated
    */
