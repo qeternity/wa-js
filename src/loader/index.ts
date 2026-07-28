@@ -273,6 +273,17 @@ export function injectLoader(): void {
   /* END: For WhatsApp >= 2.3000.0 */
 
   const chunkName = 'webpackChunkwhatsapp_web_client';
+  const chunkDescriptor = Object.getOwnPropertyDescriptor(global, chunkName);
+
+  // Current Meta-loader releases expose the legacy webpack chunk global
+  // through a guarded accessor. Reading it marks the client unofficial when
+  // the caller is not a whatsapp.com script. The Meta watcher above is the
+  // supported loader path for these releases, so do not invoke the legacy
+  // accessor merely to discover whether a webpack loader is present.
+  if (chunkDescriptor?.get || chunkDescriptor?.set) {
+    debug('guarded webpack loader detected; using Meta loader');
+    return;
+  }
 
   const chunk = global[chunkName] || [];
   if (!chunk || chunk?.length === 0) {
