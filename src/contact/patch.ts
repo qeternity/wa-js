@@ -30,6 +30,7 @@ function applyPatch() {
     displayNameOrPnForLid: functions.getDisplayNameOrPnForLid,
     formattedPhone: functions.getFormattedPhone,
     userid: functions.getUserid,
+    userhash: functions.getUserhash,
     searchName: functions.getSearchName,
     searchVerifiedName: functions.getSearchVerifiedName,
     header: functions.getHeader,

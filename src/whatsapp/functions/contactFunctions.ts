@@ -35,6 +35,11 @@ export declare function getUserid(contact: ContactModel): any;
 /**
  * @whatsapp 660666 >= 2.2327.4
  */
+export declare function getUserhash(contact: ContactModel): any;
+
+/**
+ * @whatsapp 660666 >= 2.2327.4
+ */
 export declare function getSearchVerifiedName(contact: ContactModel): any;
 
 /**
@@ -134,6 +139,7 @@ exportModule(
     getNotifyName: 'getNotifyName',
     getPremiumMessageName: 'getPremiumMessageName',
     getUserid: 'getUserid',
+    getUserhash: 'getUserhash',
     getIsMe: 'getIsMe',
     getIsUser: 'getIsUser',
     getIsGroup: 'getIsGroup',
