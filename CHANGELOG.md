@@ -1,3 +1,3 @@
-## <small>4.4.2 (2026-07-24)</small>
+## 4.5.0 (2026-07-31)
 
-* fix: protobuf named params when sending messages (#3498) ([be60fe152db53df969510d69dcdd253f9dafe354](https://github.com/wppconnect-team/wa-js/commit/be60fe152db53df969510d69dcdd253f9dafe354)), closes [#3498](https://github.com/wppconnect-team/wa-js/issues/3498)
+* build(deps-dev): update dependency @wppconnect/wa-version to ^1.5.4476 (#3545) ([9490f3f0e532d089c2be64cab918c3154d0bdd80](https://github.com/wppconnect-team/wa-js/commit/9490f3f0e532d089c2be64cab918c3154d0bdd80)), closes [#3545](https://github.com/wppconnect-team/wa-js/issues/3545)

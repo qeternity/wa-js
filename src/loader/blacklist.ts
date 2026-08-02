@@ -62,4 +62,11 @@ export const IGNORE_FAIL_MODULES: ReadonlySet<string> = new Set([
   // comes from `ServerPropsConstants` (WAWebServerPropConstants) plus the `ServerProps`
   // fallback module. `ServerPropsModel` is only used as a TypeScript type at runtime.
   'ServerPropsModel',
+  // getUserhash was removed from WAWebContactGetters in WA ~2.3000.1043126001;
+  // src/contact/patch.ts reimplements it with WAMd5's md5 when it is missing.
+  'getUserhash',
+  // WAWebConstantsDeprecated was removed from WA ~2.3000.1044096409; its values
+  // are now spread across specific modules (WAWebMediaConstants,
+  // WAWebBizCommerceConstants, ...).
+  'Constants',
 ]);

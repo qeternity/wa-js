@@ -16,7 +16,7 @@
 
 import { WPPError } from '../../util';
 import { LabelStore } from '../../whatsapp';
-import { labelDeleteAction } from '../../whatsapp/functions';
+import { callLabelDeleteAction } from '../../whatsapp/functions/callLabelDeleteAction';
 
 /**
  * Delete a list by ID
@@ -35,5 +35,5 @@ export async function remove(listId: string): Promise<void> {
       id: listId,
     });
   }
-  await labelDeleteAction(listId, label.name, label.colorIndex ?? 0);
+  await callLabelDeleteAction(listId, label.name, label.colorIndex ?? 0);
 }
