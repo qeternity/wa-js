@@ -1,5 +1,5 @@
 /*!
- * Copyright 2021 WPPConnect Team
+ * Copyright 2026 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-import { Conn, ConnGetters } from '../../whatsapp';
+export const MEDIA_UPLOAD_WORKER_AB_PROP =
+  'web_media_encrypt_upload_in_worker_enabled';
 
 /**
- * Return the current logged user is Bussiness or not
- *
- * @example
- * ```javascript
- * WPP.profile.isBusiness();
- * ```
- * @category Profile
+ * Keep media upload on the main thread while preserving every unrelated
+ * WhatsApp A/B property.
  */
-export function isBusiness(): boolean | undefined {
-  return ConnGetters?.getIsSMB(Conn) ?? Conn.isSMB;
+export function forceMediaUploadMainThread<T>(
+  getABPropConfigValue: (key: unknown) => T,
+  key: unknown
+): T | false {
+  if (key === MEDIA_UPLOAD_WORKER_AB_PROP) {
+    return false;
+  }
+
+  return getABPropConfigValue(key);
 }

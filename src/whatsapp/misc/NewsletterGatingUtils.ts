@@ -1,5 +1,5 @@
 /*!
- * Copyright 2021 WPPConnect Team
+ * Copyright 2026 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-import { Conn, ConnGetters } from '../../whatsapp';
+import { exportModule } from '../exportModule';
 
 /**
- * Return the current logged user is Bussiness or not
- *
- * @example
- * ```javascript
- * WPP.profile.isBusiness();
- * ```
- * @category Profile
+ * @whatsapp WAWebNewsletterGatingUtils
  */
-export function isBusiness(): boolean | undefined {
-  return ConnGetters?.getIsSMB(Conn) ?? Conn.isSMB;
+export declare namespace NewsletterGatingUtils {
+  /**
+   * The maximum number of subscribers (followers) the newsletter follower
+   * query is allowed to ask for. WhatsApp clamps the requested count to it.
+   */
+  function getMaxSubscriberNumber(): number;
 }
+
+exportModule(
+  exports,
+  'NewsletterGatingUtils',
+  (m) =>
+    m.getMaxSubscriberNumber &&
+    typeof m.getMaxSubscriberNumber === 'function' &&
+    m.NewsletterABPropConfig
+);

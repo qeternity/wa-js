@@ -16,8 +16,9 @@
 
 import { getMyUserWid } from '../../conn/functions/getMyUserWid';
 import { WPPError } from '../../util';
-import { CallModel, CallStore, websocket } from '../../whatsapp';
-import { CALL_STATES } from '../../whatsapp/enums';
+import { websocket } from '../../whatsapp';
+import { getVoipStackInterface } from '../../whatsapp/functions';
+import { getCall, isActiveCall, isIncomingCall } from './getCall';
 
 export interface CallRejectOptions {
   /**
@@ -54,22 +55,7 @@ export async function reject(
   options: CallRejectOptions | boolean = {}
 ): Promise<boolean> {
   const force = typeof options === 'boolean' ? options : !!options.force;
-  let call: CallModel | undefined = undefined;
-
-  if (callId) {
-    call = CallStore.get(callId);
-  } else {
-    // First incoming ring or call group
-    call = CallStore.getModelsArray().find(
-      (c) =>
-        // Fix for mantain compatibility with older versions of whatsapp web
-        c.getState() === CALL_STATES.INCOMING_RING ||
-        c.isGroup ||
-        // >= 2.3000.10213.x
-        c.getState() === CALL_STATES.ReceivedCall ||
-        c.isGroup
-    );
-  }
+  const call = getCall(callId);
 
   if (!call) {
     throw new WPPError(
@@ -81,12 +67,7 @@ export async function reject(
     );
   }
 
-  if (
-    !force &&
-    call.getState() !== CALL_STATES.INCOMING_RING &&
-    call.getState() !== CALL_STATES.ReceivedCall &&
-    !call.isGroup
-  ) {
+  if (!force && !isIncomingCall(call) && !call.isGroup) {
     throw new WPPError(
       'call_is_not_incoming_ring',
       `Call ${callId || '<empty>'} is not incoming ring`,
@@ -97,7 +78,34 @@ export async function reject(
     );
   }
 
-  if (!call.peerJid.isGroupCall()) {
+  /**
+   * Native VoIP stack (WhatsApp >= 2.3000): same path used by the reject
+   * button in `useWAWebVoipCallHandlers`. It has no call id argument, so it is
+   * only usable for the active call.
+   */
+  if (
+    !force &&
+    isActiveCall(call) &&
+    typeof getVoipStackInterface === 'function'
+  ) {
+    const voipStack = await getVoipStackInterface();
+
+    if (typeof voipStack?.rejectCall === 'function') {
+      // Marks the call as declined instead of missed on the call log
+      (call as any).userEndedCall = true;
+
+      await voipStack.rejectCall();
+
+      return true;
+    }
+  }
+
+  /**
+   * Legacy path, for WhatsApp versions without the native VoIP stack
+   *
+   * TODO: remove when 2.3000.10xx is no longer available in wa-version/html
+   */
+  if (!force && !call.peerJid.isGroupCall()) {
     await websocket.ensureE2ESessions([call.peerJid]);
   }
 
