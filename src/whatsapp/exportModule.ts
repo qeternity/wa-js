@@ -296,3 +296,48 @@ export function wrapModuleFunction<TFunc extends (...args: any[]) => any>(
   moduleIdMap.set(baseModule[functionName], moduleId);
   functionPathMap.set(baseModule[functionName], functionPath);
 }
+
+/**
+ * Try to wrap an exported module function without logging lookup details.
+ *
+ * This is intended for optional, fail-open hooks where a missing or immutable
+ * WhatsApp module must not affect the rest of WA-JS.
+ */
+export function tryWrapModuleFunction<TFunc extends (...args: any[]) => any>(
+  func: TFunc,
+  callback: (func: TFunc, ...args: InferArgs<TFunc>) => InferReturn<TFunc>
+): boolean {
+  if (typeof func !== 'function') return false;
+
+  const moduleId = moduleIdMap.get(func);
+  const functionPath = functionPathMap.get(func);
+  if (!moduleId || !functionPath) return false;
+
+  try {
+    const module = loader.loadModule(moduleId);
+    const parts = functionPath.split('.');
+    const functionName = parts.pop();
+    if (!functionName) return false;
+
+    const baseModule = parts.reduce((value, part) => value?.[part], module);
+    if (!baseModule || baseModule[functionName] !== func) return false;
+
+    const descriptor = Object.getOwnPropertyDescriptor(
+      baseModule,
+      functionName
+    );
+    if (descriptor && descriptor.writable === false && !descriptor.set) {
+      return false;
+    }
+
+    const wrapped = wrapFunction(func.bind(baseModule) as TFunc, callback);
+    baseModule[functionName] = wrapped;
+    if (baseModule[functionName] !== wrapped) return false;
+
+    moduleIdMap.set(wrapped, moduleId);
+    functionPathMap.set(wrapped, functionPath);
+    return true;
+  } catch {
+    return false;
+  }
+}

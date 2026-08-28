@@ -80,4 +80,13 @@ export declare namespace MediaPrep {
   }
 }
 
-exportModule(exports, 'MediaPrep', (m) => m.uploadProductImage && m.MediaPrep);
+export declare const prepRawMedia: typeof MediaPrep.prepRawMedia;
+
+exportModule(
+  exports,
+  {
+    MediaPrep: null,
+    prepRawMedia: 'MediaPrep.prepRawMedia',
+  },
+  (m) => m.uploadProductImage && m.MediaPrep
+);
