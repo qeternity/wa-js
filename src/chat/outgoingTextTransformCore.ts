@@ -20,6 +20,7 @@ export type OutgoingTextTransformContext =
       kind: 'media_caption';
       chatId: string;
       text: string;
+      hasExplicitCaption: boolean;
       mediaType: 'image' | 'video' | 'document';
     }>;
 
@@ -115,9 +116,6 @@ export function classifyOutgoingMediaCaption(chat: any, options: any) {
   const chatId = outgoingTextChatId(chat);
   if (!chatId || chatId === 'status@broadcast') return null;
   if (!options || typeof options !== 'object') return null;
-  if (typeof options.caption !== 'string' || options.caption.length === 0) {
-    return null;
-  }
   if (!['image', 'video', 'document'].includes(options.type)) return null;
   if (options.isViewOnce === true || options.multicast) return null;
 
@@ -137,10 +135,12 @@ export function classifyOutgoingMediaCaption(chat: any, options: any) {
     return null;
   }
 
+  const text = typeof options.caption === 'string' ? options.caption : '';
   return {
     chatId,
+    hasExplicitCaption: text.trim().length > 0,
     mediaType: options.type as 'image' | 'video' | 'document',
-    text: options.caption,
+    text,
   };
 }
 

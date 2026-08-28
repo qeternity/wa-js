@@ -86,7 +86,7 @@ exportModule(
   exports,
   {
     MediaPrep: null,
-    prepRawMedia: 'MediaPrep.prepRawMedia',
+    prepRawMedia: 'prepRawMedia',
   },
   (m) => m.uploadProductImage && m.MediaPrep
 );

@@ -251,6 +251,7 @@ test('media classification is a strict positive allowlist', () => {
       classifyOutgoingMediaCaption(chat, { caption: 'caption', type })
     ).toEqual({
       chatId: '1@g.us',
+      hasExplicitCaption: true,
       mediaType: type,
       text: 'caption',
     });
@@ -273,14 +274,6 @@ test('media classification is a strict positive allowlist', () => {
         productMsgOptions: { productId: 'product' },
       },
     ],
-    [
-      chat,
-      {
-        caption: undefined,
-        type: 'image',
-        productMsgOptions: { filename: 'file.jpg' },
-      },
-    ],
     [chat, { caption: 'x', type: 'product' }],
     [chat, { caption: 'x', type: 'album' }],
     [chat, { caption: 'x', type: 'unknown' }],
@@ -291,11 +284,67 @@ test('media classification is a strict positive allowlist', () => {
 
   expect(
     classifyOutgoingMediaCaption(chat, {
-      caption: 'ordinary',
+      caption: undefined,
       type: 'image',
-      productMsgOptions: { filename: 'ordinary.jpg' },
+      productMsgOptions: { filename: 'file.jpg' },
     })
-  ).not.toBeNull();
+  ).toEqual({
+    chatId: '1@g.us',
+    hasExplicitCaption: false,
+    mediaType: 'image',
+    text: '',
+  });
+});
+
+test('media wrapper can synthesize a caption without mutating caller options', async () => {
+  const contexts: any[] = [];
+  setOutgoingTextTransform((context) => {
+    contexts.push(context);
+    return 'scheduled notice';
+  });
+  let nativeOptions: any;
+  const preparation: any = {
+    sendToChat(_chat: any, options: any) {
+      nativeOptions = options;
+    },
+  };
+  wrapOutgoingMediaPreparation(preparation);
+  const options = {
+    type: 'document',
+    productMsgOptions: { filename: 'report.bin' },
+  };
+
+  await preparation.sendToChat({ id: { toString: () => '1@c.us' } }, options);
+
+  expect(contexts).toEqual([
+    {
+      kind: 'media_caption',
+      chatId: '1@c.us',
+      hasExplicitCaption: false,
+      mediaType: 'document',
+      text: '',
+    },
+  ]);
+  expect(nativeOptions.caption).toBe('scheduled notice');
+  expect((options as any).caption).toBeUndefined();
+});
+
+test('captionless media remains captionless when the transformer declines', async () => {
+  setOutgoingTextTransform(() => undefined);
+  let nativeOptions: any;
+  const preparation: any = {
+    sendToChat(_chat: any, options: any) {
+      nativeOptions = options;
+    },
+  };
+  wrapOutgoingMediaPreparation(preparation);
+
+  await preparation.sendToChat(
+    { id: { toString: () => '1@c.us' } },
+    { type: 'image' }
+  );
+
+  expect(nativeOptions.caption).toBeUndefined();
 });
 
 test('hook retry schedule caps and media wrapping is idempotent', () => {
