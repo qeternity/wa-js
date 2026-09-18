@@ -301,8 +301,8 @@ async function runMetaLoader(global: any): Promise<void> {
   debug('ready to use');
   await internalEv.emitAsync('loader.ready').catch(() => null);
 
-  if ((window as any).wppForceMainLoad) {
-    debug('wppForceMainLoad is set, waiting 5 seconds');
+  if ((window as any).__vatsappForceMainLoad) {
+    debug('__vatsappForceMainLoad is set, waiting 5 seconds');
     await new Promise((resolve) => setTimeout(resolve, 5000));
   } else {
     debug('waiting main ready');
@@ -325,6 +325,17 @@ export function injectLoader(): void {
   /* END: For WhatsApp >= 2.3000.0 */
 
   const chunkName = 'webpackChunkwhatsapp_web_client';
+  const chunkDescriptor = Object.getOwnPropertyDescriptor(global, chunkName);
+
+  // Current Meta-loader releases expose the legacy webpack chunk global
+  // through a guarded accessor. Reading it marks the client unofficial when
+  // the caller is not a whatsapp.com script. The Meta watcher above is the
+  // supported loader path for these releases, so do not invoke the legacy
+  // accessor merely to discover whether a webpack loader is present.
+  if (chunkDescriptor?.get || chunkDescriptor?.set) {
+    debug('guarded webpack loader detected; using Meta loader');
+    return;
+  }
 
   const chunk = global[chunkName] || [];
   if (!chunk || chunk?.length === 0) {
@@ -374,9 +385,9 @@ export function injectLoader(): void {
     debug('ready to use');
     await internalEv.emitAsync('loader.ready').catch(() => null);
 
-    debug('wppForceMainLoad', (window as any).wppForceMainLoad);
+    debug('__vatsappForceMainLoad', (window as any).__vatsappForceMainLoad);
 
-    if ((window as any).wppForceMainLoad) {
+    if ((window as any).__vatsappForceMainLoad) {
       await new Promise((resolve) => setTimeout(resolve, 5000));
     } else {
       await waitMainReady;

@@ -17,7 +17,7 @@
 import Debug from 'debug';
 
 import { toArrayBuffer, WPPError } from '../../util';
-import { LruMediaStore, MediaBlobCache } from '../../whatsapp';
+import { LruMediaStore, MediaBlobCache, MsgModel } from '../../whatsapp';
 import { getMessageById } from '.';
 
 const debug = Debug('WA-JS:chat:downloadMedia');
@@ -35,8 +35,18 @@ const debug = Debug('WA-JS:chat:downloadMedia');
  *
  * @category Message
  */
-export async function downloadMedia(id: string): Promise<Blob> {
-  const msg = await getMessageById(id);
+export async function downloadMedia(
+  msg_or_id: string | MsgModel
+): Promise<Blob> {
+  let id: string;
+  let msg: MsgModel;
+  if (typeof msg_or_id === 'string') {
+    id = msg_or_id;
+    msg = await getMessageById(msg_or_id);
+  } else {
+    msg = msg_or_id;
+    id = msg.id._serialized;
+  }
 
   if (!msg.mediaData) {
     throw new WPPError(

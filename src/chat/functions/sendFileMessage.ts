@@ -56,6 +56,10 @@ import {
   SendMessageReturn,
 } from '..';
 import {
+  OUTGOING_TEXT_TRANSFORM_BYPASS,
+  propagateOutgoingTextTransformBypass,
+} from '../outgoingTextTransformCore';
+import {
   getMessageById,
   markIsRead,
   MessageButtonsOptions,
@@ -72,6 +76,7 @@ export interface FileMessageOptions extends SendMessageOptions {
   footer?: string;
   filename?: string;
   mimetype?: string;
+  [OUTGOING_TEXT_TRANSFORM_BYPASS]?: boolean;
 }
 
 export interface AutoDetectMessageOptions extends FileMessageOptions {
@@ -403,6 +408,7 @@ export async function sendFileMessage(
     addEvenWhilePreparing: false,
     type: rawMessage.type,
   };
+  propagateOutgoingTextTransformBypass(options, processedOptions);
 
   let sendMsgResult;
 
