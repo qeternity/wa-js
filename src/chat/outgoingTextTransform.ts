@@ -16,8 +16,8 @@
 
 import * as loader from '../loader';
 import { tryWrapModuleFunction } from '../whatsapp/exportModule';
+import { prepRawMedia } from '../whatsapp/functions/prepRawMedia';
 import { sendTextMsgToChat } from '../whatsapp/functions/sendTextMsgToChat';
-import { prepRawMedia } from '../whatsapp/misc/MediaPrep';
 import { createOutgoingTextTransformHookInstaller } from './outgoingTextTransformCore';
 
 export type {

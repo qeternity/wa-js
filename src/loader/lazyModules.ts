@@ -54,6 +54,12 @@ export interface LazyModuleSource {
 export const LAZY_MODULES: {
   readonly [moduleId: string]: LazyModuleSource;
 } = {
+  // WA 2.3000.1049703040-alpha: the label utility component loads the native
+  // persistence action without opening a drawer or changing any lists.
+  WAWebListsActions: {
+    components: ['WAWebSmbMarkAsXLabelAction'],
+    pattern: /Lists.*(?:Drawer|Settings|Manage)|SmbMarkAsXLabel/,
+  },
   // Verified on a cold QR page in WA 2.3000.1046899131. These components
   // register the original exports without opening UI or invoking actions.
   WAWebGenerateEventCallLink: {
@@ -67,6 +73,16 @@ export const LAZY_MODULES: {
   WAWebSetPrivacyForOneCategoryAction: {
     components: ['WAWebPrivacyVisibilityEditDrawer.react'],
     pattern: /PrivacyVisibility/,
+  },
+  // The profile drawer registers the setter without changing the profile.
+  WAWebSetPushnameConnAction: {
+    components: ['WAWebProfileDrawer.react'],
+    pattern: /^WAWebProfileDrawer/,
+  },
+  // The new-group flow registers createGroup without creating a group.
+  WAWebGroupCreateJob: {
+    components: ['WAWebNewGroupFlow.react'],
+    pattern: /NewGroupFlow/,
   },
   // Both forward modules ship in the same bundle, so either entry recovers
   // the other. `WAWebMediaForwardMediaMsg` is preferred because it is a plain
@@ -99,6 +115,25 @@ export const LAZY_MODULES: {
       'WAWebNewGroupFlow.react',
     ],
     pattern: /communit/i,
+  },
+  // Verified on WA 2.3000.1047548844: a session that never opens the group
+  // "Invite via link" drawer registers neither module. Bootloading
+  // `WAWebGroupInviteLinkDrawer.react` registers both, since they ship in the
+  // same resource bundle.
+  WAWebMexFetchGroupInviteCodeJob: {
+    components: ['WAWebGroupInviteLinkDrawer.react'],
+    pattern: /GroupInvite/i,
+  },
+  WAWebGroupInviteJob: {
+    components: ['WAWebGroupInviteLinkDrawer.react'],
+    pattern: /GroupInvite/i,
+  },
+  // Verified on WA 2.3000.1050564944: bootloading the status drawer flow
+  // registers the revoke action without opening any status. The action
+  // module is absent from sessions that never render the status viewer.
+  WAWebRevokeStatusAction: {
+    components: ['WAWebStatusDrawerFlow.react'],
+    pattern: /StatusDrawerFlow/,
   },
 };
 
