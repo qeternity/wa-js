@@ -183,6 +183,61 @@ test('media wrapper invokes native exactly once and propagates native failures',
   expect(asyncCalls).toBe(1);
 });
 
+test('media wrapper preserves native arity for sendToChat signature detection', async () => {
+  const chat = { id: { toString: () => '1@c.us' } };
+  const options = { caption: 'caption', type: 'image' };
+  const received: any[] = [];
+  setOutgoingTextTransform(({ text }) => `${text}-transformed`);
+  const modernPreparation = {
+    sendToChat(this: any, params: any) {
+      received.push({
+        receiver: this,
+        chat: params.chat,
+        options: params.options,
+      });
+      return 'modern sent';
+    },
+  };
+  const legacyPreparation = {
+    sendToChat(this: any, chat: any, options: any) {
+      received.push({ receiver: this, chat, options });
+      return 'legacy sent';
+    },
+  };
+
+  expect(modernPreparation.sendToChat.length).toBe(1);
+  expect(legacyPreparation.sendToChat.length).toBe(2);
+  expect(wrapOutgoingMediaPreparation(modernPreparation)).toBe(true);
+  expect(wrapOutgoingMediaPreparation(legacyPreparation)).toBe(true);
+  expect(modernPreparation.sendToChat.length).toBe(1);
+  expect(legacyPreparation.sendToChat.length).toBe(2);
+
+  // Use the same signature selection as sendFileMessage.
+  for (const preparation of [modernPreparation, legacyPreparation]) {
+    const sendToChat: any = preparation.sendToChat;
+    const result =
+      sendToChat.length === 1
+        ? await sendToChat.call(preparation, { chat, options })
+        : await sendToChat.call(preparation, chat, options);
+    expect(result).toBe(
+      preparation === modernPreparation ? 'modern sent' : 'legacy sent'
+    );
+  }
+  expect(received).toEqual([
+    {
+      receiver: modernPreparation,
+      chat,
+      options: { caption: 'caption-transformed', type: 'image' },
+    },
+    {
+      receiver: legacyPreparation,
+      chat,
+      options: { caption: 'caption-transformed', type: 'image' },
+    },
+  ]);
+  expect(options.caption).toBe('caption');
+});
+
 test('bypass is consumed without mutating caller options', async () => {
   let transforms = 0;
   setOutgoingTextTransform(() => {

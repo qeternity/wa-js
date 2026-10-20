@@ -206,6 +206,16 @@ export function wrapOutgoingMediaPreparation(preparation: any): boolean {
     return original.apply(this, parsed.rebuild(options));
   };
 
+  // sendFileMessage uses the native arity to distinguish the modern
+  // sendToChat({ chat, options }) signature from the legacy
+  // sendToChat(chat, options) signature. A rest-argument wrapper has length 0,
+  // so preserve the original arity or callers will select the wrong shape.
+  try {
+    Object.defineProperty(wrapped, 'length', { value: original.length });
+  } catch {
+    return false;
+  }
+
   try {
     preparation.sendToChat = wrapped;
   } catch {
