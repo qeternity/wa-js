@@ -20,6 +20,13 @@ import { websocket } from '../../whatsapp';
 import { getVoipStackInterface } from '../../whatsapp/functions';
 import { getCall, isActiveCall, isIncomingCall } from './getCall';
 
+export interface CallRejectOptions {
+  /**
+   * Force sending the reject stanza, skipping state validation and E2E session setup.
+   */
+  force?: boolean;
+}
+
 /**
  * Reject a incoming call
  *
@@ -31,6 +38,9 @@ import { getCall, isActiveCall, isIncomingCall } from './getCall';
  * // Reject specific call id
  * WPP.call.reject(callId);
  *
+ * // Force reject specific call id
+ * WPP.call.reject(callId, { force: true });
+ *
  * // Reject any incoming call
  * WPP.on('call.incoming_call', (call) => {
  *   WPP.call.reject(call.id);
@@ -40,7 +50,11 @@ import { getCall, isActiveCall, isIncomingCall } from './getCall';
  * @param   {string}  callId  The call ID, empty to reject the first one
  * @return  {[type]}          [return description]
  */
-export async function reject(callId?: string): Promise<boolean> {
+export async function reject(
+  callId?: string,
+  options: CallRejectOptions | boolean = {}
+): Promise<boolean> {
+  const force = typeof options === 'boolean' ? options : !!options.force;
   const call = getCall(callId);
 
   if (!call) {
@@ -53,7 +67,7 @@ export async function reject(callId?: string): Promise<boolean> {
     );
   }
 
-  if (!isIncomingCall(call) && !call.isGroup) {
+  if (!force && !isIncomingCall(call) && !call.isGroup) {
     throw new WPPError(
       'call_is_not_incoming_ring',
       `Call ${callId || '<empty>'} is not incoming ring`,
@@ -69,7 +83,11 @@ export async function reject(callId?: string): Promise<boolean> {
    * button in `useWAWebVoipCallHandlers`. It has no call id argument, so it is
    * only usable for the active call.
    */
-  if (isActiveCall(call) && typeof getVoipStackInterface === 'function') {
+  if (
+    !force &&
+    isActiveCall(call) &&
+    typeof getVoipStackInterface === 'function'
+  ) {
     const voipStack = await getVoipStackInterface();
 
     if (typeof voipStack?.rejectCall === 'function') {
@@ -87,7 +105,7 @@ export async function reject(callId?: string): Promise<boolean> {
    *
    * TODO: remove when 2.3000.10xx is no longer available in wa-version/html
    */
-  if (!call.peerJid.isGroupCall()) {
+  if (!force && !call.peerJid.isGroupCall()) {
     await websocket.ensureE2ESessions([call.peerJid]);
   }
 

@@ -43,7 +43,7 @@ async function start() {
 
   page.addInitScript(() => {
     setInterval(() => {
-      (window as any).wppForceMainLoad = true;
+      (window as any).__vatsappForceMainLoad = true;
     }, 500);
   });
 
