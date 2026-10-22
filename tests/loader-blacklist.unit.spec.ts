@@ -35,6 +35,13 @@ test.describe('loader blacklist', () => {
     ).toBe(true);
   });
 
+  test('skips RA-TLS and its eager debug importers', () => {
+    for (const id of ['WATheiaRaTls', 'WAWebDebugRaTls', 'WAWebDebug']) {
+      expect(isMetaModuleBlacklisted(id)).toBe(true);
+    }
+    expect(isMetaModuleBlacklisted('WAWebDebugRaTlsHelper')).toBe(false);
+  });
+
   test('does not skip unrelated modules', () => {
     expect(isMetaModuleBlacklisted('WAWebChatCollection')).toBe(false);
     expect(isMetaModuleBlacklisted('WAWebMomentHelper')).toBe(false);

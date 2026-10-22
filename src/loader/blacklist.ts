@@ -27,6 +27,12 @@ export const META_MODULE_ID_BLACKLIST: ReadonlySet<string> = new Set([
   // resource causes native file selection to wait indefinitely for the preview.
   // Leave this UI module to WhatsApp; explicit loadModule calls remain available.
   'WAWebAttachMediaFlow.react',
+  // WA 2.3000.1050968285: this optional RA-TLS module resolves bx("47448")
+  // at initialization before its resource is registered. The debug wrappers
+  // eagerly import it too. Leave all three to explicit loading by WhatsApp.
+  'WATheiaRaTls',
+  'WAWebDebugRaTls',
+  'WAWebDebug',
   // Locale shim that fails to resolve
   'WAWebMoment-es-do',
 ]);

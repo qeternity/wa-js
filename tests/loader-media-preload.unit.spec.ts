@@ -35,6 +35,9 @@ function metaLoaderFixture() {
   const chat = { ChatCollection: {} };
   const attachmentUI = { displayName: 'AttachMediaFlow' };
   const modules: Record<string, unknown> = {
+    WATheiaRaTls: {},
+    WAWebDebugRaTls: {},
+    WAWebDebug: {},
     WAWebChatCollection: chat,
     'WAWebAttachMediaFlow.react': attachmentUI,
   };
@@ -46,6 +49,9 @@ function metaLoaderFixture() {
     __d: () => {},
     importNamespace: (id: string): unknown => {
       resolutions.push(id);
+      if (['WATheiaRaTls', 'WAWebDebugRaTls', 'WAWebDebug'].includes(id)) {
+        throw new Error('bx(...): Unknown file path "47448"');
+      }
       return modules[id];
     },
     ErrorGuard: { skipGuardGlobal: () => {} },
@@ -105,3 +111,18 @@ test('bulk enumeration skips attachment UI while explicit loading remains availa
   expect(loader.loadModule('WAWebAttachMediaFlow.react')).toBe(attachmentUI);
   expect(resolutions).toContain('WAWebAttachMediaFlow.react');
 });
+
+for (const operation of ['search', 'enumerate']) {
+  test(`${operation} does not initialize RA-TLS through debug modules`, () => {
+    const { loader, resolutions } = metaLoaderFixture();
+    if (operation === 'search') {
+      expect(loader.searchId(() => false)).toBeNull();
+    } else {
+      expect(Object.keys(loader.modules())).toContain('WAWebChatCollection');
+    }
+    expect(resolutions).toContain('WAWebChatCollection');
+    for (const id of ['WATheiaRaTls', 'WAWebDebugRaTls', 'WAWebDebug']) {
+      expect(resolutions).not.toContain(id);
+    }
+  });
+}
